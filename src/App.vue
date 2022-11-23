@@ -142,6 +142,8 @@ console.log(city);
           color: "#f67", //标志颜色
         },
         data: data,
+
+        
       },
     ],
   });
