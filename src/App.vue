@@ -2,36 +2,61 @@
   <div class="box">
     <div class="box-left"></div>
     <div id="china" class="box-center"></div>
-    <div class="box-right"></div>
+    <div style="color: #009cc9" class="box-right">
+      <table border="1" cellspacing="0" class="table">
+        <thead>
+          <tr> 
+            <th>地    区</th>
+            <th>新增确诊</th>
+            <th>累计确诊</th>
+            <th>治    愈</th>
+            <th>死    亡</th>
+          </tr>
+        </thead>
+        <transition-group tag="tbody">
+        <tbody v-for="item in store.item">
+          <tr>
+            <td align="center">{{item.name}}</td>
+            <td align="center">{{item.today.confirm}}</td>
+            <td align="center">{{item.total.confirm}}</td>
+            <td align="center">{{item.total.heal}}</td>
+            <td align="center">{{item.total.dead}}</td>
+          </tr>
+        </tbody>
+      </transition-group>
+      </table>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { initCustomFormatter, onMounted } from "vue";
+import { onMounted } from "vue";
 import { useCounterStore } from "./stores";
 import * as echarts from "echarts";
 import "../public/china.js";
-import {geoCoordMap} from './assets/geoMap'
-const store = useCounterStore();
+import { geoCoordMap } from "./assets/geoMap";
+import 'animate.css'
 
+const store = useCounterStore();
 
 onMounted(async () => {
   await store.getList();
-  const city =store.list.diseaseh5Shelf.areaTree[0].children
-console.log(city);
+  initCharts();
+});
 
-  const data = city.map(v=>{
-      return {
-        name:v.name,
-        value:geoCoordMap[v.name].concat(v.total.nowConfirm),
-      }
+const initCharts = () => {
+  const city = store.list.diseaseh5Shelf.areaTree[0].children;
+
+  const data = city.map((v) => {
+    return {
+      name: v.name,
+      value: geoCoordMap[v.name].concat(v.total.nowConfirm),
+      children: v.children,
+    };
   });
-  console.log(data);
-  
-  
+
   const charts = echarts.init(document.querySelector("#china") as HTMLElement);
 
- 
   charts.setOption({
     geo: {
       map: "china",
@@ -93,7 +118,6 @@ console.log(city);
     series: [
       {
         type: "map",
-        selectedMode: "multiple",
         map: "china",
         aspectScale: 0.8,
         layoutCenter: ["50%", "50%"], //地图位置
@@ -130,13 +154,13 @@ console.log(city);
         type: "scatter",
         coordinateSystem: "geo",
         symbol: "pin",
-        symbolSize: [45,45],
+        symbolSize: [45, 45],
         label: {
           show: true,
-          color:"#fff",
-          formatter(value:any){
-            return value.data.value[2]
-          }
+          color: "#fff",
+          formatter(value: any) {
+            return value.data.value[2];
+          },
         },
         itemStyle: {
           color: "#f67", //标志颜色
@@ -145,8 +169,11 @@ console.log(city);
       },
     ],
   });
-});
 
+  charts.on("click", (e: any) => {
+    store.item = e.data.children;
+  });
+};
 </script>
 
 <style lang="less">
@@ -175,5 +202,19 @@ body,
     width: 400px;
   }
 }
-
+.table{
+  width: 100%;
+  background-color:slategrey ;
+  tr{
+    th{
+      padding: 5px;
+      word-spacing: nowrap;
+    }
+    td{
+      padding: 5px 10px;
+      width: 100px;
+      word-spacing: nowrap;
+    }
+  }
+}
 </style>
