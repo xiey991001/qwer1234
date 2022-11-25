@@ -5,25 +5,25 @@
     <div style="color: #009cc9" class="box-right">
       <table border="1" cellspacing="0" class="table">
         <thead>
-          <tr> 
-            <th>地    区</th>
+          <tr>
+            <th>地 区</th>
             <th>新增确诊</th>
             <th>累计确诊</th>
-            <th>治    愈</th>
-            <th>死    亡</th>
+            <th>治 愈</th>
+            <th>死 亡</th>
           </tr>
         </thead>
-        <transition-group tag="tbody">
-        <tbody v-for="item in store.item">
+        <!-- <transition-group class="animate__animated animate__bounce" tag="tbody"> -->
+        <tbody :key="item.name" v-for="item in store.item" class="animate__animated animate__bounce" >
           <tr>
-            <td align="center">{{item.name}}</td>
-            <td align="center">{{item.today.confirm}}</td>
-            <td align="center">{{item.total.confirm}}</td>
-            <td align="center">{{item.total.heal}}</td>
-            <td align="center">{{item.total.dead}}</td>
+            <td align="center">{{ item.name }}</td>
+            <td align="center">{{ item.today.confirm }}</td>
+            <td align="center">{{ item.total.confirm }}</td>
+            <td align="center">{{ item.total.heal }}</td>
+            <td align="center">{{ item.total.dead }}</td>
           </tr>
         </tbody>
-      </transition-group>
+        <!-- </transition-group> -->
       </table>
     </div>
   </div>
@@ -35,7 +35,7 @@ import { useCounterStore } from "./stores";
 import * as echarts from "echarts";
 import "../public/china.js";
 import { geoCoordMap } from "./assets/geoMap";
-import 'animate.css'
+import "animate.css";
 
 const store = useCounterStore();
 
@@ -200,17 +200,18 @@ body,
   }
   &-right {
     width: 400px;
+    overflow: auto;
   }
 }
-.table{
+.table {
   width: 100%;
-  background-color:slategrey ;
-  tr{
-    th{
+  background-color: slategrey;
+  tr {
+    th {
       padding: 5px;
       word-spacing: nowrap;
     }
-    td{
+    td {
       padding: 5px 10px;
       width: 100px;
       word-spacing: nowrap;
