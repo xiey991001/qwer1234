@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <div style="color: #009cc9" class="box-left">
+    <div style="color: #009cc9" class="boxLeft">
       <div>较上日+ {{ store.chinaAdd.localConfirmH5 }}</div>
       <div>{{ store.chinaTotal.localConfirm }}</div>
       <div>本土现有确诊</div>
@@ -222,7 +222,7 @@ body,
   display: flex;
   background: url(/1.jpg) no-repeat;
   background-size: 100% 100%;
-  &-left {
+  &Left {
     width: 400px;
   }
   &-center {
