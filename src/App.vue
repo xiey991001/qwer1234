@@ -1,6 +1,30 @@
 <template>
   <div class="box">
-    <div class="box-left"></div>
+    <div style="color: #009cc9" class="box-left">
+      <div>较上日+ {{ store.chinaAdd.localConfirmH5 }}</div>
+      <div>{{ store.chinaTotal.localConfirm }}</div>
+      <div>本土现有确诊</div>
+
+      <div>较上日+ {{ store.chinaAdd.nowConfirm }}</div>
+      <div>{{ store.chinaTotal.nowConfirm }}</div>
+      <div>现有确诊</div>
+
+      <div>较上日+ {{ store.chinaAdd.confirm }}</div>
+      <div>{{ store.chinaTotal.confirm }}</div>
+      <div>累计确诊</div>
+
+      <div>较上日+ {{ store.chinaAdd.noInfect }}</div>
+      <div>{{ store.chinaTotal.noInfect }}</div>
+      <div>无症状感染者</div>
+
+      <div>较上日+ {{ store.chinaAdd.importedCase }}</div>
+      <div>{{ store.chinaTotal.importedCase }}</div>
+      <div>境外输入</div>
+
+      <div>较上日+ {{ store.chinaAdd.dead }}</div>
+      <div>{{ store.chinaTotal.dead }}</div>
+      <div>累计死亡</div>
+    </div>
     <div id="china" class="box-center"></div>
     <div style="color: #009cc9" class="box-right">
       <table border="1" cellspacing="0" class="table">
@@ -14,7 +38,11 @@
           </tr>
         </thead>
         <!-- <transition-group class="animate__animated animate__bounce" tag="tbody"> -->
-        <tbody :key="item.name" v-for="item in store.item" class="animate__animated animate__bounce" >
+        <tbody
+          :key="item.name"
+          v-for="item in store.item"
+          class="animate__animated animate__bounce"
+        >
           <tr>
             <td align="center">{{ item.name }}</td>
             <td align="center">{{ item.today.confirm }}</td>
@@ -31,14 +59,14 @@
 
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { useCounterStore } from "./stores";
+import { useStore } from "./stores";
 import * as echarts from "echarts";
 import "../public/china.js";
 import { geoCoordMap } from "./assets/geoMap";
 import "animate.css";
 
-const store = useCounterStore();
-
+const store = useStore();
+console.log(store.chinaAdd);
 onMounted(async () => {
   await store.getList();
   initCharts();
@@ -46,6 +74,8 @@ onMounted(async () => {
 
 const initCharts = () => {
   const city = store.list.diseaseh5Shelf.areaTree[0].children;
+  // 默认展示数据
+  store.item = city[1].children;
 
   const data = city.map((v) => {
     return {
