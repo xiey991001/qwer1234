@@ -1,31 +1,47 @@
 <template>
   <div class="box">
-    <div style="color: #009cc9" class="boxLeft">
-      <div>较上日+ {{ store.chinaAdd.localConfirmH5 }}</div>
-      <div>{{ store.chinaTotal.localConfirm }}</div>
-      <div>本土现有确诊</div>
-
-      <div>较上日+ {{ store.chinaAdd.nowConfirm }}</div>
-      <div>{{ store.chinaTotal.nowConfirm }}</div>
-      <div>现有确诊</div>
-
-      <div>较上日+ {{ store.chinaAdd.confirm }}</div>
-      <div>{{ store.chinaTotal.confirm }}</div>
-      <div>累计确诊</div>
-
-      <div>较上日+ {{ store.chinaAdd.noInfect }}</div>
-      <div>{{ store.chinaTotal.noInfect }}</div>
-      <div>无症状感染者</div>
-
-      <div>较上日+ {{ store.chinaAdd.importedCase }}</div>
-      <div>{{ store.chinaTotal.importedCase }}</div>
-      <div>境外输入</div>
-
-      <div>较上日+ {{ store.chinaAdd.dead }}</div>
-      <div>{{ store.chinaTotal.dead }}</div>
-      <div>累计死亡</div>
+    <div style="color: #009cc9" class="box-left">
+      <!-- 顶部数据版 -->
+      <div class="box-left-card">
+        <section>
+          <div>较上日+ {{ store.chinaAdd.localConfirmH5 }}</div>
+          <div>{{ store.chinaTotal.localConfirm }}</div>
+          <div>本土现有确诊</div>
+        </section>
+        <section>
+          <div>较上日+ {{ store.chinaAdd.nowConfirm }}</div>
+          <div>{{ store.chinaTotal.nowConfirm }}</div>
+          <div>现有确诊</div>
+        </section>
+        <section>
+          <div>较上日+ {{ store.chinaAdd.confirm }}</div>
+          <div>{{ store.chinaTotal.confirm }}</div>
+          <div>累计确诊</div>
+        </section>
+        <section>
+          <div>较上日+{{ store.chinaAdd.noInfect }}</div>
+          <div>{{ store.chinaTotal.noInfect }}</div>
+          <div>无症状感染者</div>
+        </section>
+        <section>
+          <div>较上日+ {{ store.chinaAdd.importedCase }}</div>
+          <div>{{ store.chinaTotal.importedCase }}</div>
+          <div>境外输入</div>
+        </section>
+        <section>
+          <div>较上日+ {{ store.chinaAdd.dead }}</div>
+          <div>{{ store.chinaTotal.dead }}</div>
+          <div>累计死亡</div>
+        </section>
+      </div>
+      <!-- 中间南丁格尔图 -->
+      <div class="box-left-pie"></div>
     </div>
+    <!-- legend: { bottom: 10, left: 'center', data: ['CityA', 'CityB', 'CityD',
+    'CityC', 'CityE'] } -->
+    <!-- 中间地图 -->
     <div id="china" class="box-center"></div>
+    <!-- 右侧地区详细数据 -->
     <div style="color: #009cc9" class="box-right">
       <table border="1" cellspacing="0" class="table">
         <thead>
@@ -58,25 +74,25 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
 import { useStore } from "./stores";
+import { onMounted } from "vue";
 import * as echarts from "echarts";
 import "../public/china.js";
 import { geoCoordMap } from "./assets/geoMap";
 import "animate.css";
 
 const store = useStore();
-console.log(store.chinaAdd);
+// console.log(store);
 onMounted(async () => {
   await store.getList();
   initCharts();
+  initPie();
 });
 
 const initCharts = () => {
   const city = store.list.diseaseh5Shelf.areaTree[0].children;
   // 默认展示数据
   store.item = city[1].children;
-
   const data = city.map((v) => {
     return {
       name: v.name,
@@ -204,6 +220,100 @@ const initCharts = () => {
     store.item = e.data.children;
   });
 };
+
+const initPie = () => {
+  const charts = echarts.init(
+    document.querySelector(".box-left-pie") as HTMLElement
+  );
+  console.log(store.cityDetail);
+
+  charts.setOption({
+    backgroundColor: "#223651",
+    tooltip: {
+      trigger: "item",
+      formatter: "{a} <br/>{b} : {c} ({d}%)",
+    },
+    legend: {
+      left: "center",
+      top: "bottom",
+      data: [
+        "rose1",
+        "rose2",
+        "rose3",
+        "rose4",
+        "rose5",
+        "rose6",
+        "rose7",
+        "rose8",
+      ],
+    },
+    // 下载数据
+    // toolbox: {
+    //   show: true,
+    //   feature: {
+    //     mark: { show: true },
+    //     dataView: { show: true, readOnly: false },
+    //     restore: { show: true },
+    //     saveAsImage: { show: true },
+    //   },
+    // },
+    series: [
+      // {
+      //   name: "Radius Mode",
+      //   type: "pie",
+      //   radius: [20, 140],
+      //   center: ["50%", "50%"],
+      //   roseType: "radius",
+      //   itemStyle: {
+      //     borderRadius: 5,
+      //   },
+      //   label: {
+      //     show: true,
+      //     // 布尔值控制指示箭头开关
+      //   },
+      //   emphasis: {
+      //     label: {
+      //       show: true,
+      //       fontSize:'20',
+      //     },
+      //   },
+      //   data: [
+      //     { value: 40, name: "rose 1" },
+      //     { value: 33, name: "rose 2" },
+      //     { value: 28, name: "rose 3" },
+      //     { value: 22, name: "rose 4" },
+      //     { value: 20, name: "rose 5" },
+      //     { value: 15, name: "rose 6" },
+      //     { value: 12, name: "rose 7" },
+      //     { value: 10, name: "rose 8" },
+      //   ],
+      // },
+
+      {
+        name: "",
+        type: "pie",
+        radius: [20, 130],
+        center: ["50%", "50%"],
+        roseType: "area",
+        itemStyle: {
+          borderRadius: 5,
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: "20",
+          },
+        },
+        data: store.cityDetail.map((v) => {
+          return {
+            name: v.city,
+            value: v.local_confirm_add,
+          };
+        }),
+      },
+    ],
+  });
+};
 </script>
 
 <style lang="less">
@@ -211,6 +321,9 @@ const initCharts = () => {
   margin: 0;
   padding: 0;
 }
+@itemColor: #41b0db;
+@itemBg: #223651;
+@itemBorder: #212028;
 html,
 body,
 #app {
@@ -222,8 +335,31 @@ body,
   display: flex;
   background: url(/1.jpg) no-repeat;
   background-size: 100% 100%;
-  &Left {
+  &-left {
     width: 400px;
+    &-pie {
+      height: 350px;
+      margin-top: 20px;
+    }
+    &-card {
+      display: grid;
+      grid-template-columns: auto auto auto;
+      grid-template-rows: auto auto auto;
+      section {
+        background: @itemBg;
+        border: 1px solid @itemBorder;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        div:nth-child(2) {
+          color: @itemColor;
+          padding: 10px;
+          font-size: 20px;
+          font-weight: bold;
+        }
+      }
+    }
   }
   &-center {
     flex: 1;

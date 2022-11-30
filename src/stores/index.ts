@@ -1,6 +1,12 @@
-import { getApiList } from '../server'
-import { defineStore } from 'pinia'
-import type { RootObject,Children } from './type';
+import { defineStore } from "pinia";
+import { getApiList } from "../server";
+import type {
+  RootObject,
+  Children,
+  ChinaTotal,
+  ChinaAdd,
+  LocalCityNCOVDataList,
+} from "./type";
 
 // export const useCounterStore = defineStore('counter', () => {
 //   const count = ref(0);
@@ -11,17 +17,22 @@ import type { RootObject,Children } from './type';
 //   return { count, doubleCount, increment }
 // })
 
-export const useCounterStore = defineStore({
+export const useStore = defineStore({
   id: "counter",
   state: () => ({
-    list:<RootObject> {},
-    item:<Children[]>[]
+    list: <RootObject>{},
+    item: <Children[]>[],
+    chinaTotal: <ChinaTotal>{},
+    chinaAdd: <ChinaAdd>{},
+    cityDetail: <LocalCityNCOVDataList[]>[],
   }),
   actions: {
     async getList() {
       const result = await getApiList();
-      this.list = result
-      console.log(result);
+      this.list = result;
+      this.chinaAdd = this.list.diseaseh5Shelf.chinaAdd;
+      this.chinaTotal = this.list.diseaseh5Shelf.chinaTotal;
+      this.cityDetail = this.list.localCityNCOVDataList.slice(0, 10);
     },
   },
 });
