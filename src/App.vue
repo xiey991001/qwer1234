@@ -37,8 +37,6 @@
       <!-- 中间南丁格尔图 -->
       <div class="box-left-pie"></div>
     </div>
-    <!-- legend: { bottom: 10, left: 'center', data: ['CityA', 'CityB', 'CityD',
-    'CityC', 'CityE'] } -->
     <!-- 中间地图 -->
     <div id="china" class="box-center"></div>
     <!-- 右侧地区详细数据 -->
@@ -233,20 +231,21 @@ const initPie = () => {
       trigger: "item",
       formatter: "{a} <br/>{b} : {c} ({d}%)",
     },
-    legend: {
-      left: "center",
-      top: "bottom",
-      data: [
-        "rose1",
-        "rose2",
-        "rose3",
-        "rose4",
-        "rose5",
-        "rose6",
-        "rose7",
-        "rose8",
-      ],
-    },
+    // 底部按钮
+    // legend: {
+    //   left: "center",
+    //   top: "bottom",
+    //   data: [
+    //     "rose1",
+    //     "rose2",
+    //     "rose3",
+    //     "rose4",
+    //     "rose5",
+    //     "rose6",
+    //     "rose7",
+    //     "rose8",
+    //   ],
+    // },
     // 下载数据
     // toolbox: {
     //   show: true,
