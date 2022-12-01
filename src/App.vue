@@ -36,6 +36,8 @@
       </div>
       <!-- 中间南丁格尔图 -->
       <div class="box-left-pie"></div>
+      <!-- 底部折线图 -->
+      <div class="box-left-line"></div>
     </div>
     <!-- 中间地图 -->
     <div id="china" class="box-center"></div>
@@ -72,19 +74,26 @@
 </template>
 
 <script setup lang="ts">
+// 引入相关数据用于渲染
 import { useStore } from "./stores";
+// 初始化生命周期钩子函数
 import { onMounted } from "vue";
-import * as echarts from "echarts";
-import "../public/china.js";
+// 引入echarts组件
+import * as echarts from "echarts/core";
+// 引入中间地图文件
+import "./china.js";
+// 地图经纬度用于数据渲染
 import { geoCoordMap } from "./assets/geoMap";
+// 引入动画库-右侧数据版使用
 import "animate.css";
 
 const store = useStore();
-// console.log(store);
+
 onMounted(async () => {
   await store.getList();
   initCharts();
   initPie();
+  initLine();
 });
 
 const initCharts = () => {
@@ -223,7 +232,6 @@ const initPie = () => {
   const charts = echarts.init(
     document.querySelector(".box-left-pie") as HTMLElement
   );
-  console.log(store.cityDetail);
 
   charts.setOption({
     backgroundColor: "#223651",
@@ -235,27 +243,25 @@ const initPie = () => {
     // legend: {
     //   left: "center",
     //   top: "bottom",
-    //   data: [
-    //     "rose1",
-    //     "rose2",
-    //     "rose3",
-    //     "rose4",
-    //     "rose5",
-    //     "rose6",
-    //     "rose7",
-    //     "rose8",
-    //   ],
-    // },
-    // 下载数据
-    // toolbox: {
-    //   show: true,
-    //   feature: {
-    //     mark: { show: true },
-    //     dataView: { show: true, readOnly: false },
-    //     restore: { show: true },
-    //     saveAsImage: { show: true },
+    //   data: store.cityDetail.map((v) => {
+    //     return {
+    //       name: v.city,
+    //     };
+    //   }),
+    //   textStyle: {
+    //     color: "rgba(119, 232, 21, 1)",
     //   },
     // },
+    // 下载数据
+    toolbox: {
+      show: true,
+      feature: {
+        mark: { show: true },
+        dataView: { show: true, readOnly: false },
+        restore: { show: true },
+        saveAsImage: { show: true },
+      },
+    },
     series: [
       // {
       //   name: "Radius Mode",
@@ -313,6 +319,45 @@ const initPie = () => {
     ],
   });
 };
+
+const initLine = () => {
+  const charts = echarts.init(
+    document.querySelector(".box-left-line") as HTMLElement
+  );
+  charts.setOption({
+    backgroundColor: "#223651",
+    tooltip: {
+      trigger: "axis",
+    },
+    xAxis: {
+      type: "category",
+      data: store.cityDetail.map((v) => v.city),
+      axisLine: {
+        lineStyle: {
+          color: "#fff",
+        },
+      },
+    },
+    yAxis: {
+      type: "value",
+      axisLine: {
+        lineStyle: {
+          color: "#fff",
+        },
+      },
+    },
+    label: {
+      show: true,
+    },
+    series: [
+      {
+        data: store.cityDetail.map((v) => v.local_confirm_add),
+        type: "line",
+        smooth: true,
+      },
+    ],
+  });
+};
 </script>
 
 <style lang="less">
@@ -337,6 +382,10 @@ body,
   &-left {
     width: 400px;
     &-pie {
+      height: 350px;
+      margin-top: 20px;
+    }
+    &-line {
       height: 350px;
       margin-top: 20px;
     }
