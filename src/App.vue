@@ -84,7 +84,7 @@ import * as echarts from "echarts/core";
 import "./china.js";
 // 地图经纬度用于数据渲染
 import { geoCoordMap } from "./assets/geoMap";
-// 引入动画库-右侧数据版使用
+// 引入动画库-右侧数据版使用 有问题
 import "animate.css";
 
 const store = useStore();
