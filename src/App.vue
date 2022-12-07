@@ -46,11 +46,11 @@
       <table border="1" cellspacing="0" class="table">
         <thead>
           <tr>
-            <th>地 区</th>
+            <th>地    区</th>
             <th>新增确诊</th>
             <th>累计确诊</th>
-            <th>治 愈</th>
-            <th>死 亡</th>
+            <th>治    愈</th>
+            <th>死    亡</th>
           </tr>
         </thead>
         <!-- <transition-group class="animate__animated animate__bounce" tag="tbody"> -->
